@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 
-const Buttons = (text) => {
+const Buttons = ({text}) => {
   return (
     <Button
       variant="contained"
