@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Post from "./pages/Post";
+import PostDetail from "./pages/PostDetail";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/post",
         element: <Post />,
+      },
+      {
+        path: "/post/postDetail",
+        element: <PostDetail />,
       },
     ],
   },
