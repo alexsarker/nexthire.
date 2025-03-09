@@ -6,7 +6,6 @@ import ButtonOut from "../components/ButtonOut";
 import { Link } from "react-router-dom";
 const Home = () => {
   const { user } = useContext(AuthContext);
-  console.log(user);
 
   return (
     <div>

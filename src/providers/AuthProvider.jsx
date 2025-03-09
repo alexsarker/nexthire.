@@ -36,10 +36,10 @@ const AuthProvider = ({ children }) => {
       setUser(currentUser);
       setLoading(false);
     });
-    return () => {
-      return unsubscribe();
-    };
+  
+    return () => unsubscribe();
   }, []);
+  
 
   const updateUserProfile = (name) => {
     return updateProfile(auth.currentUser, {
