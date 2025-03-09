@@ -1,12 +1,12 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBJ0O44-5K4-54PNzYp6NqdlUF36s0nCPo",
-  authDomain: "nexthire-e0d7a.firebaseapp.com",
-  projectId: "nexthire-e0d7a",
-  storageBucket: "nexthire-e0d7a.firebasestorage.app",
-  messagingSenderId: "473746638279",
-  appId: "1:473746638279:web:a1890f8b245753aeecc5e2"
+  apiKey: import.meta.env.VITE_apiKey,
+  authDomain: import.meta.env.VITE_authDomain,
+  projectId: import.meta.env.VITE_projectId,
+  storageBucket: import.meta.env.VITE_storageBucket,
+  messagingSenderId: import.meta.env.VITE_messagingSenderId,
+  appId: import.meta.env.VITE_appId,
 };
 
 const app = initializeApp(firebaseConfig);
