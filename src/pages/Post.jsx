@@ -5,87 +5,120 @@ import {
   MenuItem,
   Select,
   TextField,
+  Alert,
 } from "@mui/material";
 import Buttons from "../components/Buttons";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../providers/AuthProvider";
 
 const Post = () => {
-  const [age, setAge] = useState("");
-  const [jobType, setJobType] = useState("");
-  const [level, setLevel] = useState("");
+  const { user } = useContext(AuthContext);
+  const [alert, setAlert] = useState(null);
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-    setJobType(event.target.value);
-    setLevel(event.target.value);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const jobData = {
+      jobTitle: form.get("jobTitle"),
+      jobDescription: form.get("jobDescription"),
+      category: form.get("category"),
+      jobType: form.get("jobType"),
+      level: form.get("level"),
+      dayTime: form.get("dayTime"),
+      salary: Number(form.get("salary")),
+      location: form.get("location"),
+      poster: user.email,
+    };
+
+    fetch("http://localhost:5000/jobs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(jobData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.insertedId) {
+          setAlert({ type: "success", message: "Job posted successfully!" });
+          e.target.reset();
+        } else {
+          throw new Error("Failed to post the job.");
+        }
+      })
+      .catch((error) => {
+        setAlert({ type: "error", message: error.message });
+      });
   };
 
   return (
-    <div className="flex flex-col mt-12 gap-8">
+    <form onSubmit={handleSubmit} className="flex flex-col mt-12 gap-8">
       <h5 className="text-main text-3xl text-center">Post a Job</h5>
-      <Input size="md" placeholder="Job Title" />
+
+      {alert && <Alert severity={alert.type}>{alert.message}</Alert>}
+
+      <Input size="md" name="jobTitle" placeholder="Job Title" required />
       <TextField
         id="standard-multiline-flexible"
         label="Job Description"
+        name="jobDescription"
         multiline
         maxRows={4}
         variant="standard"
+        required
       />
       <FormControl variant="standard">
-        <InputLabel id="demo-simple-select-standard-label">
-          Job Category
-        </InputLabel>
-        <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value={age}
-          onChange={handleChange}
-          label="Age"
-        >
-          <MenuItem value={10}>Development</MenuItem>
-          <MenuItem value={20}>Sales & Marketing</MenuItem>
-          <MenuItem value={30}>Accounts</MenuItem>
-          <MenuItem value={40}>Creative</MenuItem>
-          <MenuItem value={50}>Engineering</MenuItem>
-          <MenuItem value={60}>Creative</MenuItem>
-          <MenuItem value={70}>Digital Marketing</MenuItem>
-          <MenuItem value={80}>HR & Administration</MenuItem>
+        <InputLabel>Job Category</InputLabel>
+        <Select name="category" defaultValue="" required>
+          <MenuItem value="Development">Development</MenuItem>
+          <MenuItem value="Sales & Marketing">Sales & Marketing</MenuItem>
+          <MenuItem value="Accounts">Accounts</MenuItem>
+          <MenuItem value="Creative">Creative</MenuItem>
+          <MenuItem value="Engineering">Engineering</MenuItem>
+          <MenuItem value="Digital Marketing">Digital Marketing</MenuItem>
+          <MenuItem value="HR & Administration">HR & Administration</MenuItem>
         </Select>
       </FormControl>
       <FormControl variant="standard">
-        <InputLabel id="demo-simple-select-standard-label">Job Type</InputLabel>
-        <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value={jobType}
-          onChange={handleChange}
-          label="JobType"
-        >
-          <MenuItem value={10}>Onsite (Part Time)</MenuItem>
-          <MenuItem value={10}>Onsite (Full Time)</MenuItem>
-          <MenuItem value={10}>Remote (Part Time)</MenuItem>
-          <MenuItem value={10}>Remote (Full Time)</MenuItem>
+        <InputLabel>Job Type</InputLabel>
+        <Select name="jobType" defaultValue="" required>
+          <MenuItem value="Onsite (Part Time)">Onsite (Part Time)</MenuItem>
+          <MenuItem value="Onsite (Full Time)">Onsite (Full Time)</MenuItem>
+          <MenuItem value="Remote (Part Time)">Remote (Part Time)</MenuItem>
+          <MenuItem value="Remote (Full Time)">Remote (Full Time)</MenuItem>
         </Select>
       </FormControl>
       <FormControl variant="standard">
-        <InputLabel id="demo-simple-select-standard-label">Level</InputLabel>
-        <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value={level}
-          onChange={handleChange}
-          label="Level"
-        >
-          <MenuItem value={10}>Beginner-Level</MenuItem>
-          <MenuItem value={20}>Mid-Level</MenuItem>
-          <MenuItem value={30}>Senior-Level</MenuItem>
+        <InputLabel>Level</InputLabel>
+        <Select name="level" defaultValue="" required>
+          <MenuItem value="Beginner-Level">Beginner-Level</MenuItem>
+          <MenuItem value="Mid-Level">Mid-Level</MenuItem>
+          <MenuItem value="Senior-Level">Senior-Level</MenuItem>
         </Select>
       </FormControl>
-      <Input size="md" placeholder="Day & Time" />
-      <Input size="md" placeholder="Salary Range" />
-      <Input size="md" placeholder="Office Location" />
-      <Buttons text="Submit" />
-    </div>
+      <Input
+        size="md"
+        name="dayTime"
+        type="text"
+        placeholder="Day & Time"
+        required
+      />
+      <Input
+        size="md"
+        name="salary"
+        type="number"
+        placeholder="Salary Range"
+        required
+      />
+      <Input
+        size="md"
+        name="location"
+        type="text"
+        placeholder="Office Location"
+        required
+      />
+      <Buttons text="Submit" type="submit" />
+    </form>
   );
 };
 
