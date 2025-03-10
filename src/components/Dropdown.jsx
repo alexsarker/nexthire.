@@ -1,137 +1,69 @@
+import { useEffect, useState } from "react";
 import {
   Accordion,
-  AccordionActions,
-  AccordionDetails,
   AccordionSummary,
-  Button,
+  AccordionDetails,
   Typography,
+  Button,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useNavigate } from "react-router-dom";
+
+const categories = [
+  "Development",
+  "Sales & Marketing",
+  "Accounts",
+  "Engineering",
+  "Creative",
+  "Digital Marketing",
+  "HR & Administration",
+];
 
 const Dropdown = () => {
+  const [jobs, setJobs] = useState({});
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    categories.forEach((category) => {
+      fetch(`http://localhost:5000/jobs/${category}`)
+        .then((res) => res.json())
+        .then((data) => setJobs((prev) => ({ ...prev, [category]: data })));
+    });
+  }, []);
+
   return (
     <div className="mt-12">
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
-        >
-          <Typography
-            component="span"
-            variant="h6"
-            className="text-xl font-medium"
-          >
-            Development
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-          <Typography component="span"
-            variant="h6"
-            className="text-xl font-medium">
-            Sales & Marketing
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-          <Typography component="span"
-            variant="h6"
-            className="text-xl font-medium">
-            Accounts
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-          <Typography component="span"
-            variant="h6"
-            className="text-xl font-medium">
-            Engineering
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-          <Typography component="span"
-            variant="h6"
-            className="text-xl font-medium">
-            Creative
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-          <Typography component="span"
-            variant="h6"
-            className="text-xl font-medium">
-            Digital Marketing
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-          <Typography component="span"
-            variant="h6"
-            className="text-xl font-medium">
-            HR & Administration
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
+      {categories.map((category) => (
+        <Accordion key={category}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">{category}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            {jobs[category]?.length > 0 ? (
+              jobs[category].map((job) => (
+                <div
+                  key={job._id}
+                  className="flex justify-between items-center border-b border-b-neutral-300 py-2"
+                >
+                  <Typography variant="body2">{job.jobTitle}</Typography>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    onClick={() => navigate(`/post/${job._id}`)}
+                  >
+                    Apply Now
+                  </Button>
+                </div>
+              ))
+            ) : (
+              <Typography variant="body2" color="textSecondary">
+                No jobs available.
+              </Typography>
+            )}
+          </AccordionDetails>
+        </Accordion>
+      ))}
     </div>
   );
 };

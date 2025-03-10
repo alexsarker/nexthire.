@@ -21,12 +21,14 @@ const Post = () => {
     const jobData = {
       jobTitle: form.get("jobTitle"),
       jobDescription: form.get("jobDescription"),
+      company: form.get("company"),
       category: form.get("category"),
       jobType: form.get("jobType"),
       level: form.get("level"),
       dayTime: form.get("dayTime"),
       salary: Number(form.get("salary")),
       location: form.get("location"),
+      deadline: form.get("deadline"),
       poster: user.email,
     };
 
@@ -67,6 +69,7 @@ const Post = () => {
         variant="standard"
         required
       />
+      <Input size="md" name="company" placeholder="Company Name" required />
       <FormControl variant="standard">
         <InputLabel>Job Category</InputLabel>
         <Select name="category" defaultValue="" required>
@@ -115,6 +118,12 @@ const Post = () => {
         name="location"
         type="text"
         placeholder="Office Location"
+        required
+      />
+      <Input
+        size="md"
+        name="deadline"
+        placeholder="Application Deadline"
         required
       />
       <Buttons text="Submit" type="submit" />

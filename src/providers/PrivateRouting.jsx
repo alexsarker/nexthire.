@@ -12,7 +12,7 @@ const PrivateRouting = ({ children }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <BarLoader color="#D32F2F" width={200} />
+        <BarLoader color="#3498db" width="100%" />
       </div>
     );
   }
